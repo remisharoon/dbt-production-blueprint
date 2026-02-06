@@ -32,6 +32,9 @@ jobs:
             mkdocs-minify-plugin \
             mkdocs-git-revision-date-localized-plugin
 
+      - name: Install dbt packages
+        run: dbt deps
+
       - name: Generate dbt docs
         env:
           DBT_PROFILES_YML: ${{ secrets.DBT_PROFILES_YML }}
