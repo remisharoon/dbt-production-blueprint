@@ -32,20 +32,33 @@ jobs:
             mkdocs-minify-plugin \
             mkdocs-git-revision-date-localized-plugin
 
-      - name: Configure dbt profile (optional)
-        if: ${{ secrets.DBT_PROFILES_YML != '' }}
-        run: |
-          mkdir -p ~/.dbt
-          printf "%s" "${{ secrets.DBT_PROFILES_YML }}" > ~/.dbt/profiles.yml
-
       - name: Generate dbt docs
         env:
-          DBT_PROFILES_DIR: ~/.dbt
+          DBT_PROFILES_YML: ${{ secrets.DBT_PROFILES_YML }}
         run: |
-          # Prefer a standard run with a real profile if available.
-          # If no warehouse connection is available in CI, fall back to --empty-catalog.
-          dbt docs generate --target-dir docs/dbt_artifacts || \
-          dbt docs generate --target-dir docs/dbt_artifacts --empty-catalog
+          mkdir -p ~/.dbt
+
+          if [ -n "$DBT_PROFILES_YML" ]; then
+            printf "%s" "$DBT_PROFILES_YML" > ~/.dbt/profiles.yml
+            dbt docs generate --target-dir docs/dbt_artifacts
+          else
+            cat <<'PROFILE' > ~/.dbt/profiles.yml
+            dbt_production_blueprint:
+              target: ci
+              outputs:
+                ci:
+                  type: snowflake
+                  account: dummy
+                  user: dummy
+                  password: dummy
+                  role: dummy
+                  database: dummy
+                  warehouse: dummy
+                  schema: dummy
+                  threads: 4
+            PROFILE
+            dbt docs generate --target-dir docs/dbt_artifacts --empty-catalog
+          fi
 
       - name: Deploy with MkDocs
         run: mkdocs gh-deploy --force
