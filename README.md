@@ -106,6 +106,7 @@ Note: some tests are set to `severity: warn` to demonstrate real-world data qual
 - Model and column-level docs live in `schema.yml` files.
 - Doc blocks are defined in `models/docs.md` for `Total Revenue` and `LTV`.
 - MkDocs site configuration is in `mkdocs.yml` and embeds dbt docs from `docs/dbt_artifacts`.
+- The documentation website is published via GitHub Pages using the `gh-pages` branch.
 
 **Exposures**
 Defined in `models/exposures.yml` for finance dashboards and customer LTV applications.
@@ -138,6 +139,7 @@ Enable GitHub Pages with Actions:
 1. Go to **Settings > Pages** in your GitHub repo.
 2. Under **Source**, select **GitHub Actions**.
 3. Push to `main` to trigger `.github/workflows/deploy-docs.yml`.
+4. The site will be available at `https://remisharoon.github.io/dbt-production-blueprint/` (configured in `mkdocs.yml`).
 
 **CI Profiles for dbt Docs**
 The workflow supports an optional secret named `DBT_PROFILES_YML` that should contain the full contents of a `profiles.yml`. This allows `dbt docs generate` to run in CI without checking profiles into the repo. If a live connection is not available, the workflow falls back to `--empty-catalog` but still requires a valid profile structure.

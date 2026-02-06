@@ -2,7 +2,7 @@
 
 Welcome to the **dbt Production Blueprint** documentation site.
 
-[![GitHub Repo](https://img.shields.io/badge/GitHub-dbt--production--blueprint-24292e?logo=github)](https://github.com/<your-org>/dbt-production-blueprint)
+[![GitHub Repo](https://img.shields.io/badge/GitHub-dbt--production--blueprint-24292e?logo=github)](https://github.com/remisharoon/dbt-production-blueprint)
 
 ## Overview
 

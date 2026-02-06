@@ -1,8 +1,8 @@
 site_name: dbt Production Blueprint
 site_description: Enterprise-grade dbt blueprint for Snowflake with full documentation and dbt docs integration.
-site_url: https://<your-org>.github.io/dbt-production-blueprint/
-repo_url: https://github.com/<your-org>/dbt-production-blueprint
-repo_name: <your-org>/dbt-production-blueprint
+site_url: https://remisharoon.github.io/dbt-production-blueprint/
+repo_url: https://github.com/remisharoon/dbt-production-blueprint
+repo_name: remisharoon/dbt-production-blueprint
 edit_uri: edit/main/docs/
 
 use_directory_urls: false

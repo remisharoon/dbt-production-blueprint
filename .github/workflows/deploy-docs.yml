@@ -42,21 +42,20 @@ jobs:
             printf "%s" "$DBT_PROFILES_YML" > ~/.dbt/profiles.yml
             dbt docs generate --target-dir docs/dbt_artifacts
           else
-            cat <<'PROFILE' > ~/.dbt/profiles.yml
-            dbt_production_blueprint:
-              target: ci
-              outputs:
-                ci:
-                  type: snowflake
-                  account: dummy
-                  user: dummy
-                  password: dummy
-                  role: dummy
-                  database: dummy
-                  warehouse: dummy
-                  schema: dummy
-                  threads: 4
-            PROFILE
+            printf "%s\n" \
+              "dbt_production_blueprint:" \
+              "  target: ci" \
+              "  outputs:" \
+              "    ci:" \
+              "      type: snowflake" \
+              "      account: dummy" \
+              "      user: dummy" \
+              "      password: dummy" \
+              "      role: dummy" \
+              "      database: dummy" \
+              "      warehouse: dummy" \
+              "      schema: dummy" \
+              "      threads: 4" > ~/.dbt/profiles.yml
             dbt docs generate --target-dir docs/dbt_artifacts --empty-catalog
           fi
 
