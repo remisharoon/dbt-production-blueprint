@@ -1,0 +1,145 @@
+version: 2
+
+models:
+  - name: dim_customers
+    description: "Customer dimension deduplicated to the latest record per customer."
+    columns:
+      - name: customer_key
+        description: "Surrogate key for the customer dimension."
+        data_type: varchar
+        tests:
+          - not_null
+          - unique
+      - name: customer_id
+        description: "Business identifier for the customer."
+        data_type: varchar
+        tests:
+          - not_null
+          - is_alphanumeric
+      - name: first_name
+        description: "Customer first name."
+        data_type: varchar
+      - name: last_name
+        description: "Customer last name."
+        data_type: varchar
+      - name: email
+        description: "Normalized email address."
+        data_type: varchar
+      - name: phone
+        description: "Customer phone number when available."
+        data_type: varchar
+      - name: created_at
+        description: "Customer creation timestamp."
+        data_type: timestamp_ntz
+      - name: updated_at
+        description: "Customer updated timestamp."
+        data_type: timestamp_ntz
+      - name: customer_status
+        description: "Normalized customer status."
+        data_type: varchar
+      - name: customer_region
+        description: "Reporting region for the customer."
+        data_type: varchar
+      - name: is_active
+        description: "Boolean indicator for active customers."
+        data_type: boolean
+
+  - name: fct_orders
+    description: "Incremental order fact table with payment rollups, status categorization, and soft-delete handling."
+    columns:
+      - name: order_id
+        description: "Order identifier."
+        data_type: varchar
+        tests:
+          - not_null
+          - unique
+      - name: order_key
+        description: "Surrogate key for orders."
+        data_type: varchar
+      - name: customer_key
+        description: "Surrogate key to dim_customers."
+        data_type: varchar
+        tests:
+          - relationships:
+              to: ref('dim_customers')
+              field: customer_key
+              config:
+                severity: warn
+      - name: customer_id
+        description: "Business customer identifier."
+        data_type: varchar
+      - name: order_date
+        description: "Date the order was placed."
+        data_type: date
+      - name: updated_at
+        description: "Order updated timestamp for incremental logic."
+        data_type: timestamp_ntz
+      - name: order_status
+        description: "Normalized order status."
+        data_type: varchar
+      - name: order_status_group
+        description: "Mapped status category from intermediate layer."
+        data_type: varchar
+      - name: order_total
+        description: "Original order total."
+        data_type: number(12,2)
+      - name: currency
+        description: "Currency code."
+        data_type: varchar
+      - name: total_paid_amount
+        description: "Total payment amount for the order."
+        data_type: number(12,2)
+      - name: payment_coverage_status
+        description: "Coverage of payment relative to order total."
+        data_type: varchar
+      - name: payment_count
+        description: "Number of payment transactions for the order."
+        data_type: number(38,0)
+      - name: last_payment_date
+        description: "Most recent payment date."
+        data_type: date
+      - name: has_refund_or_chargeback
+        description: "Flag indicating refund or chargeback activity."
+        data_type: boolean
+      - name: is_deleted
+        description: "Soft-delete indicator from source system."
+        data_type: boolean
+      - name: deleted_at
+        description: "Timestamp when order was marked deleted."
+        data_type: timestamp_ntz
+      - name: net_order_total
+        description: "Net order total excluding soft-deleted orders. {{ doc('total_revenue') }}"
+        data_type: number(12,2)
+        tests:
+          - dbt_expectations.expect_column_values_to_be_between:
+              min_value: 0
+              max_value: 100000
+
+  - name: fct_customer_ltv
+    description: "Customer lifetime value aggregates derived from order facts."
+    columns:
+      - name: customer_key
+        description: "Surrogate key to dim_customers."
+        data_type: varchar
+        tests:
+          - not_null
+          - unique
+      - name: customer_id
+        description: "Business customer identifier."
+        data_type: varchar
+      - name: customer_region
+        description: "Customer reporting region."
+        data_type: varchar
+      - name: lifetime_value
+        description: "Total revenue contributed by a customer over their lifetime. {{ doc('ltv') }}"
+        data_type: number(12,2)
+        tests:
+          - dbt_expectations.expect_column_values_to_be_between:
+              min_value: 0
+              max_value: 1000000
+      - name: order_count
+        description: "Total number of orders placed by the customer."
+        data_type: number(38,0)
+      - name: last_order_date
+        description: "Most recent order date."
+        data_type: date

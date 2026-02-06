@@ -1,0 +1,40 @@
+version: 2
+
+models:
+  - name: fct_revenue
+    description: "Finance mart aggregate of revenue by day, currency, and region."
+    columns:
+      - name: order_date
+        description: "Order date grain for revenue reporting."
+        data_type: date
+        tests:
+          - not_null
+      - name: currency
+        description: "Currency code for the revenue grain."
+        data_type: varchar
+      - name: customer_region
+        description: "Region used for finance reporting."
+        data_type: varchar
+      - name: total_revenue
+        description: "Total recognized revenue for the grain. {{ doc('total_revenue') }}"
+        data_type: number(12,2)
+        tests:
+          - dbt_expectations.expect_column_values_to_be_between:
+              min_value: 0
+              max_value: 1000000
+      - name: order_count
+        description: "Number of orders contributing to the revenue grain."
+        data_type: number(38,0)
+
+  - name: region_summary
+    description: "Dynamic region summary generated using a macro-driven SQL template."
+    columns:
+      - name: region
+        description: "Region label used for dynamic reporting."
+        data_type: varchar
+      - name: order_count
+        description: "Total orders for the region."
+        data_type: number(38,0)
+      - name: total_revenue
+        description: "Total revenue for the region. {{ doc('total_revenue') }}"
+        data_type: number(12,2)

@@ -1,0 +1,178 @@
+version: 2
+
+models:
+  - name: stg_customers
+    description: "Staged customers with standardized identifiers, cleaned text fields, and normalized regions."
+    columns:
+      - name: customer_id_raw
+        description: "Raw customer identifier as provided by the source extract."
+        data_type: varchar
+      - name: customer_id
+        description: "Business identifier from source, standardized to uppercase."
+        data_type: varchar
+        tests:
+          - not_null
+          - unique:
+              config:
+                severity: warn
+          - is_alphanumeric
+      - name: customer_key
+        description: "Surrogate key generated from customer_id."
+        data_type: varchar
+        tests:
+          - not_null
+      - name: first_name
+        description: "Customer first name with basic standardization."
+        data_type: varchar
+      - name: last_name
+        description: "Customer last name with basic standardization."
+        data_type: varchar
+      - name: email
+        description: "Lower-cased email address; may be null due to raw data quality."
+        data_type: varchar
+        tests:
+          - not_null:
+              config:
+                severity: warn
+      - name: phone
+        description: "Normalized phone number where available."
+        data_type: varchar
+      - name: created_at
+        description: "Record creation timestamp from source."
+        data_type: timestamp_ntz
+      - name: updated_at
+        description: "Record last update timestamp from source."
+        data_type: timestamp_ntz
+      - name: customer_status
+        description: "Normalized customer status values."
+        data_type: varchar
+        tests:
+          - accepted_values:
+              values: ['active', 'inactive', 'suspended', 'unknown']
+              config:
+                severity: warn
+      - name: customer_region
+        description: "Normalized region for reporting (NA, EMEA, APAC, LATAM)."
+        data_type: varchar
+        tests:
+          - accepted_values:
+              values: ['North America', 'EMEA', 'APAC', 'LATAM', 'Unknown']
+              config:
+                severity: warn
+      - name: is_active
+        description: "Boolean indicator for active customer status."
+        data_type: boolean
+
+  - name: stg_orders
+    description: "Staged order headers with normalized status, currency, and soft-delete flag."
+    columns:
+      - name: order_id_raw
+        description: "Raw order identifier from the source system."
+        data_type: varchar
+      - name: order_id
+        description: "Business identifier from source, standardized to uppercase."
+        data_type: varchar
+        tests:
+          - not_null
+          - unique:
+              config:
+                severity: warn
+          - is_alphanumeric
+      - name: customer_id
+        description: "Foreign key to customers."
+        data_type: varchar
+        tests:
+          - not_null
+          - relationships:
+              to: ref('stg_customers')
+              field: customer_id
+              config:
+                severity: warn
+      - name: order_key
+        description: "Surrogate key generated from order_id."
+        data_type: varchar
+      - name: order_date
+        description: "Order date as a date type."
+        data_type: date
+      - name: updated_at
+        description: "Last updated timestamp for the order."
+        data_type: timestamp_ntz
+      - name: order_status
+        description: "Normalized order status."
+        data_type: varchar
+        tests:
+          - accepted_values:
+              values: ['completed', 'pending', 'shipped', 'cancelled', 'canceled', 'processing', 'refunded', 'chargeback', 'unknown']
+              config:
+                severity: warn
+      - name: order_total
+        description: "Order total after type casting and basic null handling."
+        data_type: number(12,2)
+        tests:
+          - dbt_expectations.expect_column_values_to_be_between:
+              min_value: 0
+              max_value: 100000
+      - name: currency
+        description: "Currency code standardized to uppercase."
+        data_type: varchar
+      - name: is_deleted
+        description: "Soft-delete indicator from source."
+        data_type: boolean
+
+  - name: stg_payments
+    description: "Staged payments with normalized methods, statuses, and numeric amounts."
+    columns:
+      - name: payment_id_raw
+        description: "Raw payment identifier from the source system."
+        data_type: varchar
+      - name: payment_id
+        description: "Business identifier from source, standardized to uppercase."
+        data_type: varchar
+        tests:
+          - not_null
+          - unique:
+              config:
+                severity: warn
+          - is_alphanumeric
+      - name: order_id
+        description: "Foreign key to orders."
+        data_type: varchar
+        tests:
+          - not_null
+          - relationships:
+              to: ref('stg_orders')
+              field: order_id
+              config:
+                severity: warn
+      - name: payment_key
+        description: "Surrogate key generated from payment_id."
+        data_type: varchar
+      - name: payment_date
+        description: "Payment date as a date type."
+        data_type: date
+      - name: payment_method
+        description: "Normalized payment method."
+        data_type: varchar
+        tests:
+          - accepted_values:
+              values: ['card', 'paypal', 'unknown']
+              config:
+                severity: warn
+      - name: amount
+        description: "Payment amount cast to numeric; nulls converted to 0."
+        data_type: number(12,2)
+        tests:
+          - dbt_expectations.expect_column_values_to_be_between:
+              min_value: 0
+              max_value: 100000
+      - name: payment_status
+        description: "Normalized payment status."
+        data_type: varchar
+        tests:
+          - accepted_values:
+              values: ['settled', 'authorized', 'voided', 'failed', 'refunded', 'chargeback', 'unknown']
+              config:
+                severity: warn
+      - name: provider_txn_id
+        description: "External provider transaction identifier."
+        data_type: varchar

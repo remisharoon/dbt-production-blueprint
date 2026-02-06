@@ -1,0 +1,12 @@
+order_id,customer_id,order_date,updated_at,order_status,order_total,currency,is_deleted
+O1001,C001,2024-06-10,2024-06-12,Completed,120.50,USD,false
+O1002,C002,2024-06-11,2024-06-11,pending,80.00,USD,false
+O1003,C003,2024-06-12,2024-06-20,Shipped,200.00,USD,false
+O1004,C004,2024-06-13,2024-06-13,Cancelled,50.00,USD,true
+O1005,C005,2024-06-14,2024-06-14,Processing,,USD,false
+O1006,C006,2024-06-15,2024-07-01,Refunded,30.00,USD,false
+O1002,C002,2024-06-11,2024-06-11,pending,80.00,USD,false
+O1007,C007,2024-06-16,2024-06-16,Completed,75.00,USD,false
+O1008,C008,2024-06-17,2024-06-17,completed,60.00,usd,false
+O1009,C009,2024-06-18,2024-06-25,CHARGEBACK,90.00,USD,false
+O1010,C001,2024-06-19,2024-06-19,Shipped,110.00,USD,false

@@ -1,0 +1,11 @@
+customer_id,first_name,last_name,email,phone,created_at,updated_at,status,region
+C001,Jane,Smith,Jane.Smith@example.com,555-1111,2024-01-10,2024-06-01,ACTIVE,North America
+C002,john,doe,john.doe@example.com,,2024-02-15,2024-02-15,active,EMEA
+C003,ALICE,Johnson,ALICE.J@example.com,555-3333,2024-03-20,2024-07-01,Inactive,APAC
+C004,Bob,Lee,,555-4444,2024-04-05,2024-04-05,ACTIVE,North America
+C002,john,doe,john.doe@example.com,,2024-02-15,2024-02-15,active,EMEA
+C005,Maria,Lopez,maria.lopez@example.com,555-5555,2024-05-10,2024-05-10,Active,latam
+C006,Sue,O'Neil,sue.oneil@example.com,555-6666,2024-05-15,2024-05-20,ACTIVE,EMEA
+C007,,Nguyen,linh.nguyen@example.com,555-7777,2024-06-01,2024-06-01,ACTIVE,APAC
+C008,Tim,Reed,TIM.REED@example.com,555-8888,2024-06-20,2024-06-20,active,NORTH AMERICA
+C009,Raj,Kumar,raj.kumar@example.com,555-9999,2024-07-01,2024-07-15,SUSPENDED,APAC

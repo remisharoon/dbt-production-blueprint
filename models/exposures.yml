@@ -1,0 +1,25 @@
+version: 2
+
+exposures:
+  - name: finance_executive_dashboard
+    type: dashboard
+    maturity: high
+    description: "Executive finance dashboard for revenue and order health monitoring."
+    depends_on:
+      - ref('fct_revenue')
+      - ref('fct_orders')
+      - ref('dim_customers')
+    owner:
+      name: Finance Analytics
+      email: finance-analytics@example.com
+
+  - name: customer_ltv_app
+    type: application
+    maturity: medium
+    description: "Internal application used by CRM and lifecycle teams to track customer value."
+    depends_on:
+      - ref('fct_customer_ltv')
+      - ref('dim_customers')
+    owner:
+      name: Customer Intelligence
+      email: customer-intel@example.com

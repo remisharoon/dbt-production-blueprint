@@ -1,0 +1,20 @@
+selectors:
+  - name: state_modified
+    description: "Nodes modified since the last saved state."
+    definition: "state:modified"
+
+  - name: state_modified_plus
+    description: "Modified nodes plus downstream dependencies."
+    definition: "state:modified+"
+
+  - name: state_modified_configs
+    description: "Nodes whose configurations changed since the last saved state."
+    definition: "state:modified.configs"
+
+  - name: marts_only
+    description: "All mart models."
+    definition: "path:models/marts"
+
+  - name: staging_only
+    description: "All staging models."
+    definition: "path:models/staging"

@@ -1,0 +1,12 @@
+payment_id,order_id,payment_date,payment_method,amount,status,provider_txn_id
+P5001,O1001,2024-06-10,card,120.50,settled,TXN-001
+P5002,O1002,2024-06-11,CARD,80.00,authorized,TXN-002
+P5003,O1003,2024-06-12,PayPal,200.00,settled,TXN-003
+P5004,O1004,2024-06-13,card,50.00,voided,
+P5005,O1005,2024-06-14,card,,failed,TXN-005
+P5006,O1006,2024-06-15,card,30.00,refunded,TXN-006
+P5007,O1007,2024-06-16,card,75.00,SETTLED,TXN-007
+P5008,O1008,2024-06-17,card,60.00,settled,TXN-008
+P5009,O1009,2024-06-18,card,90.00,chargeback,TXN-009
+P5010,O1010,2024-06-19,card,110.00,settled,TXN-010
+P5002,O1002,2024-06-11,CARD,80.00,authorized,TXN-002

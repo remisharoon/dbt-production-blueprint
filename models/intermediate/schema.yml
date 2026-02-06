@@ -1,0 +1,62 @@
+version: 2
+
+models:
+  - name: int_order_payments
+    description: "Order-level payment rollups combining order headers with payment transactions."
+    columns:
+      - name: order_id
+        description: "Order identifier."
+        data_type: varchar
+        tests:
+          - not_null
+          - unique
+          - relationships:
+              to: ref('stg_orders')
+              field: order_id
+      - name: order_total
+        description: "Order total from staging."
+        data_type: number(12,2)
+      - name: currency
+        description: "Currency code for the order."
+        data_type: varchar
+      - name: updated_at
+        description: "Order updated timestamp."
+        data_type: timestamp_ntz
+      - name: is_deleted
+        description: "Soft-delete indicator from the source."
+        data_type: boolean
+      - name: total_paid_amount
+        description: "Total amount paid across all payment transactions for the order."
+        data_type: number(12,2)
+        tests:
+          - dbt_expectations.expect_column_values_to_be_between:
+              min_value: 0
+              max_value: 100000
+      - name: last_payment_date
+        description: "Latest payment date for the order."
+        data_type: date
+      - name: payment_count
+        description: "Number of payment transactions for the order."
+        data_type: number(38,0)
+      - name: has_refund_or_chargeback
+        description: "Flag indicating refunded or chargeback activity."
+        data_type: boolean
+      - name: payment_coverage_status
+        description: "Derived payment coverage status based on order total vs. paid amount."
+        data_type: varchar
+
+  - name: int_order_status_categorized
+    description: "Order status mapping into broader categories using dynamic Jinja logic."
+    columns:
+      - name: order_id
+        description: "Order identifier."
+        data_type: varchar
+        tests:
+          - not_null
+          - unique
+      - name: order_status
+        description: "Normalized order status from staging."
+        data_type: varchar
+      - name: order_status_group
+        description: "Status category generated via Jinja loop."
+        data_type: varchar

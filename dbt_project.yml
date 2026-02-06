@@ -1,0 +1,66 @@
+name: dbt_production_blueprint
+version: '1.0.0'
+config-version: 2
+
+profile: dbt_production_blueprint
+
+model-paths: ["models"]
+seed-paths: ["seeds"]
+macro-paths: ["macros"]
+analysis-paths: ["analyses"]
+test-paths: ["tests"]
+snapshot-paths: ["snapshots"]
+
+clean-targets:
+  - "target"
+  - "dbt_packages"
+
+quoting:
+  database: false
+  schema: false
+  identifier: false
+
+vars:
+  regions: ["North America", "EMEA", "APAC", "LATAM"]
+
+on-run-start:
+  - "{{ log_run_start() }}"
+
+models:
+  dbt_production_blueprint:
+    +persist_docs:
+      relation: true
+      columns: true
+    +contract:
+      enforced: true
+    +on_schema_change: fail
+
+    staging:
+      +schema: stg
+      +materialized: view
+      +tags: ["staging"]
+
+    intermediate:
+      +schema: int
+      +materialized: view
+      +tags: ["intermediate"]
+
+    marts:
+      +schema: mart
+      +materialized: table
+      +tags: ["mart"]
+
+      core:
+        +schema: mart_core
+
+      finance:
+        +schema: mart_finance
+
+seeds:
+  dbt_production_blueprint:
+    +schema: raw
+    +quote_columns: false
+
+snapshots:
+  dbt_production_blueprint:
+    +schema: snapshots
