@@ -1,6 +1,6 @@
 # dbt Production Blueprint
 
-A production-grade dbt project that demonstrates real-world enterprise patterns for an e-commerce (retail) warehouse on Snowflake. This repository is intentionally "kitchen sink" and includes staging cleanup, intermediate logic, marts, incremental models, snapshots, macros, custom tests, exposures, selectors, and operational hooks.
+A production-grade dbt project that demonstrates real-world enterprise patterns for an e-commerce (retail) warehouse on Snowflake. This repository is intentionally "kitchen sink" and includes staging cleanup, intermediate logic, marts, incremental models, snapshots, macros, custom tests, exposures, selectors, operational hooks, and a full documentation site.
 
 **Key Features**
 - Snowflake-optimized SQL with dbt 1.8+.
@@ -12,6 +12,7 @@ A production-grade dbt project that demonstrates real-world enterprise patterns 
 - Docs blocks and model descriptions.
 - Run hooks and access grants.
 - State-based CI selectors for `state:modified` workflows.
+- MkDocs site with embedded dbt docs.
 
 **Project Structure**
 ```
@@ -104,6 +105,7 @@ Note: some tests are set to `severity: warn` to demonstrate real-world data qual
 **Documentation**
 - Model and column-level docs live in `schema.yml` files.
 - Doc blocks are defined in `models/docs.md` for `Total Revenue` and `LTV`.
+- MkDocs site configuration is in `mkdocs.yml` and embeds dbt docs from `docs/dbt_artifacts`.
 
 **Exposures**
 Defined in `models/exposures.yml` for finance dashboards and customer LTV applications.
@@ -111,6 +113,34 @@ Defined in `models/exposures.yml` for finance dashboards and customer LTV applic
 **Operational Hooks**
 - `on-run-start` inserts run metadata into `audit_run` in the target schema.
 - `post-hook` on `dim_customers` grants read access to role `reporter`.
+
+**Documentation Site (MkDocs + dbt Docs)**
+1. Install docs tooling.
+```bash
+pip install mkdocs mkdocs-material mkdocs-minify-plugin mkdocs-git-revision-date-localized-plugin
+```
+2. Generate dbt docs into the MkDocs tree.
+```bash
+dbt docs generate --target-dir docs/dbt_artifacts
+```
+3. Serve locally.
+```bash
+mkdocs serve
+```
+
+If your local environment does not have a warehouse connection, you can run:
+```bash
+dbt docs generate --target-dir docs/dbt_artifacts --empty-catalog
+```
+
+**GitHub Pages (Docs Deployment)**
+Enable GitHub Pages with Actions:
+1. Go to **Settings > Pages** in your GitHub repo.
+2. Under **Source**, select **GitHub Actions**.
+3. Push to `main` to trigger `.github/workflows/deploy-docs.yml`.
+
+**CI Profiles for dbt Docs**
+The workflow supports an optional secret named `DBT_PROFILES_YML` that should contain the full contents of a `profiles.yml`. This allows `dbt docs generate` to run in CI without checking profiles into the repo. If a live connection is not available, the workflow falls back to `--empty-catalog` but still requires a valid profile structure.
 
 **Where to Add Things**
 - New sources: `models/staging/_sources.yml`

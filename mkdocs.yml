@@ -1,0 +1,54 @@
+site_name: dbt Production Blueprint
+site_description: Enterprise-grade dbt blueprint for Snowflake with full documentation and dbt docs integration.
+site_url: https://<your-org>.github.io/dbt-production-blueprint/
+repo_url: https://github.com/<your-org>/dbt-production-blueprint
+repo_name: <your-org>/dbt-production-blueprint
+edit_uri: edit/main/docs/
+
+use_directory_urls: false
+
+theme:
+  name: material
+  language: en
+  features:
+    - navigation.instant
+    - navigation.sections
+    - navigation.expand
+    - navigation.top
+    - search.suggest
+    - search.highlight
+    - content.tabs.link
+  palette:
+    - scheme: default
+      primary: indigo
+      accent: cyan
+      toggle:
+        icon: material/weather-night
+        name: Switch to dark mode
+    - scheme: slate
+      primary: indigo
+      accent: cyan
+      toggle:
+        icon: material/white-balance-sunny
+        name: Switch to light mode
+
+plugins:
+  - search
+  - minify:
+      minify_html: true
+  - git-revision-date-localized:
+      type: timeago
+      fallback_to_build_date: true
+
+markdown_extensions:
+  - admonition
+  - attr_list
+  - footnotes
+  - tables
+  - toc:
+      permalink: true
+
+nav:
+  - Home: index.md
+  - Project Architecture: architecture.md
+  - dbt Documentation: dbt_artifacts/index.html
