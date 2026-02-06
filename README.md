@@ -1,9 +1,25 @@
 # dbt Production Blueprint
 
-A production-grade dbt project that demonstrates real-world enterprise patterns for an e-commerce (retail) warehouse on Snowflake. This repository is intentionally "kitchen sink" and includes staging cleanup, intermediate logic, marts, incremental models, snapshots, macros, custom tests, exposures, selectors, operational hooks, and a full documentation site.
+A production-grade dbt project that demonstrates real-world enterprise patterns for an e-commerce (retail) warehouse. This repository is intentionally "kitchen sink" and includes staging cleanup, intermediate logic, marts, incremental models, snapshots, macros, custom tests, exposures, selectors, operational hooks, and a full documentation site.
+
+**Quick Start with DuckDB (Demo/Testing)**
+```bash
+# Install dependencies
+pip install -r requirements.txt
+
+# Install dbt packages
+dbt deps
+
+# Load seed data
+dbt seed
+
+# Build everything
+dbt build
+```
 
 **Key Features**
-- Snowflake-optimized SQL with dbt 1.8+.
+- **DuckDB support** for local development, testing, and documentation (no external database required)
+- Snowflake-optimized SQL with dbt 1.8+ (production-ready)
 - Layered model design: `staging` -> `intermediate` -> `marts`.
 - Incremental fact processing with soft-delete handling.
 - SCD Type 2 snapshots for customer history.
@@ -30,18 +46,44 @@ snapshots/
 ```
 
 **Prerequisites**
-- `dbt-core>=1.8` and `dbt-snowflake` installed.
-- A Snowflake account and a dbt profile named `dbt_production_blueprint`.
+- Python 3.8+
+- For local development/demo: DuckDB (included in requirements.txt)
+- For production: Snowflake account and credentials
 
-**Quick Start**
+**Quick Start (DuckDB - Recommended for Demo/Testing)**
 ```bash
-# Install dependencies
+# Install Python dependencies
+pip install -r requirements.txt
+
+# Install dbt packages
 dbt deps
 
 # Load seed data
 dbt seed
 
 # Build everything (models + tests + snapshots)
+dbt build
+
+# Generate and serve documentation
+dbt docs generate
+dbt docs serve
+```
+
+**Quick Start (Snowflake - Production)**
+```bash
+# Install Python dependencies
+pip install -r requirements.txt
+
+# Install dbt packages
+dbt deps
+
+# Configure your Snowflake profile in ~/.dbt/profiles.yml
+# See SETUP_GUIDE.md for detailed instructions
+
+# Load seed data
+dbt seed
+
+# Build everything
 dbt build
 ```
 
@@ -153,26 +195,42 @@ The workflow supports an optional secret named `DBT_PROFILES_YML` that should co
 - New tests: `tests/`
 - New snapshots: `snapshots/`
 
-**Profiles Example**
-A `profiles.yml` is not included. Create a local profile named `dbt_production_blueprint`.
+**Profiles Configuration**
 
-Example profile key structure:
+The project includes a [`profiles.yml`](profiles.yml) file pre-configured for DuckDB development. For production Snowflake usage, create a profile in `~/.dbt/profiles.yml`.
+
+**DuckDB (Default - for Demo/Testing)**
+The project uses [`profiles.yml`](profiles.yml) in the project root with DuckDB configuration:
 ```yaml
-# ~/.dbt/profiles.yml
-# dbt_production_blueprint:
-#   target: dev
-#   outputs:
-#     dev:
-#       type: snowflake
-#       account: <account>
-#       user: <user>
-#       password: <password>
-#       role: <role>
-#       database: <database>
-#       warehouse: <warehouse>
-#       schema: <schema>
-#       threads: 4
+dbt_production_blueprint_duckdb:
+  target: dev
+  outputs:
+    dev:
+      type: duckdb
+      path: dev.duckdb
+      schema: main
+      threads: 4
 ```
+
+**Snowflake (Production)**
+For production use, create `~/.dbt/profiles.yml`:
+```yaml
+dbt_production_blueprint_snowflake:
+  target: dev
+  outputs:
+    dev:
+      type: snowflake
+      account: <account>
+      user: <user>
+      password: <password>
+      role: <role>
+      database: <database>
+      warehouse: <warehouse>
+      schema: <schema>
+      threads: 4
+```
+
+See [`SETUP_GUIDE.md`](SETUP_GUIDE.md) for detailed setup instructions.
 
 **Recommended CI Pattern**
 ```bash

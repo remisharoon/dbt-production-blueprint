@@ -2,7 +2,7 @@ name: dbt_production_blueprint
 version: '1.0.0'
 config-version: 2
 
-profile: dbt_production_blueprint
+profile: dbt_production_blueprint_duckdb
 
 model-paths: ["models"]
 seed-paths: ["seeds"]

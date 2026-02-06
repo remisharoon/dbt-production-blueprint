@@ -1,0 +1,12 @@
+# dbt Core
+dbt-core>=1.8.0,<2.0.0
+
+# dbt DuckDB Adapter
+dbt-duckdb>=1.8.0,<2.0.0
+
+# Optional: dbt Snowflake Adapter (for production use)
+# dbt-snowflake>=1.8.0,<2.0.0
+
+# Documentation
+mkdocs>=1.5.0
+mkdocs-material>=9.0.0

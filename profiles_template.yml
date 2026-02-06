@@ -1,0 +1,26 @@
+dbt_production_blueprint:
+  target: dev
+  outputs:
+    dev:
+      type: snowflake
+      account: <your_account_identifier>  # e.g., xy12345.us-east-1
+      user: <your_username>
+      password: <your_password>  # OR use authenticator: externalbrowser
+      role: <your_role>  # e.g., ACCOUNTADMIN, SYSADMIN, or a custom role
+      database: <your_database>  # e.g., analytics, data_warehouse
+      warehouse: <your_warehouse>  # e.g., compute_wh, reporting_wh
+      schema: dbt_dev
+      threads: 4
+      query_tag: dbt_production_blueprint
+
+    ci:
+      type: snowflake
+      account: <your_account_identifier>
+      user: <your_username>
+      password: <your_password>  # OR use authenticator: externalbrowser
+      role: <your_role>
+      database: <your_database>
+      warehouse: <your_warehouse>
+      schema: dbt_ci
+      threads: 4
+      query_tag: dbt_production_blueprint_ci
