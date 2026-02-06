@@ -138,7 +138,7 @@ Seed data is intentionally dirty to showcase cleaning logic and data quality tes
 
 **Testing**
 - Generic tests for `not_null`, `unique`, and `relationships` are applied across layers.
-- `dbt_expectations` tests validate numeric ranges.
+- `metaplane/dbt_expectations` tests validate numeric ranges.
 - Custom generic test `is_alphanumeric` for ID columns.
 - Data test `revenue_consistency` validates core vs. finance revenue.
 

@@ -29,15 +29,15 @@ source venv/bin/activate
 echo "✅ Virtual environment activated"
 echo ""
 
-# Install dependencies
-echo "📥 Installing Python dependencies..."
+# Install dependencies (includes dbt-duckdb adapter)
+echo "📥 Installing Python dependencies (including dbt-duckdb adapter)..."
 pip install --upgrade pip
 pip install -r requirements.txt
 echo "✅ Dependencies installed"
 echo ""
 
 # Install dbt packages
-echo "📦 Installing dbt packages..."
+echo "📦 Installing dbt packages (dbt_utils, dbt_expectations, audit_helper)..."
 dbt deps
 echo "✅ dbt packages installed"
 echo ""

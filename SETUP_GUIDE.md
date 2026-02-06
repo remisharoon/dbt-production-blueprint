@@ -53,11 +53,12 @@ The [`profiles.yml`](profiles.yml) file defines three targets:
 
 ### DuckDB Adapter
 
-The [`packages.yml`](packages.yml) includes:
-```yaml
-- package: dbt-labs/dbt-duckdb
-  version: [">=1.8.0", "<2.0.0"]
+The DuckDB adapter is installed via pip (see [`requirements.txt`](requirements.txt)):
+```txt
+dbt-duckdb>=1.8.0,<2.0.0
 ```
+
+Note: The DuckDB adapter is a Python package, not a dbt package, so it's installed via pip rather than `dbt deps`.
 
 ## DuckDB vs Snowflake
 
