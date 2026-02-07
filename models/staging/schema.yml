@@ -114,8 +114,9 @@ models:
         data_type: number(12,2)
         tests:
           - dbt_expectations.expect_column_values_to_be_between:
-              min_value: 0
-              max_value: 100000
+              arguments:
+                min_value: 0
+                max_value: 100000
       - name: currency
         description: "Currency code standardized to uppercase."
         data_type: varchar
@@ -169,8 +170,9 @@ models:
         data_type: number(12,2)
         tests:
           - dbt_expectations.expect_column_values_to_be_between:
-              min_value: 0
-              max_value: 100000
+              arguments:
+                min_value: 0
+                max_value: 100000
       - name: payment_status
         description: "Normalized payment status."
         data_type: varchar

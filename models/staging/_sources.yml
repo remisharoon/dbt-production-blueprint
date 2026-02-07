@@ -15,7 +15,8 @@ sources:
           - name: email
             tests:
               - dbt_expectations.expect_column_values_to_be_of_type:
-                  column_type: varchar
+                  arguments:
+                    column_type: varchar
 
       - name: raw_orders
         description: "Order headers with status, totals, and soft-delete flags."

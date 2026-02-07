@@ -113,8 +113,9 @@ models:
         data_type: number(12,2)
         tests:
           - dbt_expectations.expect_column_values_to_be_between:
-              min_value: 0
-              max_value: 100000
+              arguments:
+                min_value: 0
+                max_value: 100000
 
   - name: fct_customer_ltv
     description: "Customer lifetime value aggregates derived from order facts."
@@ -136,8 +137,9 @@ models:
         data_type: number(12,2)
         tests:
           - dbt_expectations.expect_column_values_to_be_between:
-              min_value: 0
-              max_value: 1000000
+              arguments:
+                min_value: 0
+                max_value: 1000000
       - name: order_count
         description: "Total number of orders placed by the customer."
         data_type: number(38,0)

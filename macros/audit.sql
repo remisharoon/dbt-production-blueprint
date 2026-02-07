@@ -15,7 +15,7 @@
         {% set insert_sql %}
             insert into {{ target.database }}.{{ target.schema }}.audit_run
             (run_started_at, invocation_id, target_name)
-            values (current_timestamp(), '{{ invocation_id }}', '{{ target.name }}')
+            values ({{ dbt.current_timestamp() }}, '{{ invocation_id }}', '{{ target.name }}')
         {% endset %}
 
         {% do run_query(insert_sql) %}

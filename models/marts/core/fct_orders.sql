@@ -12,7 +12,7 @@ with orders as (
 
     {% if is_incremental() %}
     where updated_at >= (
-        select coalesce(max(updated_at), to_timestamp_ntz('1900-01-01'))
+        select coalesce(max(updated_at), cast('1900-01-01' as {{ dbt.type_timestamp() }}))
         from {{ this }}
     )
     {% endif %}
@@ -51,7 +51,7 @@ joined as (
         p.last_payment_date,
         p.has_refund_or_chargeback,
         o.is_deleted,
-        case when o.is_deleted then current_timestamp() else null end as deleted_at,
+        case when o.is_deleted then {{ dbt.current_timestamp() }} else null end as deleted_at,
         case when o.is_deleted then 0 else o.order_total end as net_order_total
     from orders o
     left join payments p
