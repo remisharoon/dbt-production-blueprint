@@ -59,4 +59,4 @@ jobs:
           dbt docs generate --target ci --target-path docs/dbt_artifacts
 
       - name: Deploy with MkDocs
-        run: mkdocs gh-deploy --force --ignore-protocol
+        run: mkdocs gh-deploy --force
