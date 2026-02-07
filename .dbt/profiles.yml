@@ -1,0 +1,8 @@
+dbt_production_blueprint_duckdb:
+  target: dev
+  outputs:
+    dev:
+      type: duckdb
+      path: local.duckdb
+      schema: main
+      threads: 4

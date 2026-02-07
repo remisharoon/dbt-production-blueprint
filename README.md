@@ -151,7 +151,7 @@ Seed data is intentionally dirty to showcase cleaning logic and data quality tes
 **Testing**
 - Generic tests for `not_null`, `unique`, and `relationships` are applied across layers.
 - `metaplane/dbt_expectations` tests validate numeric ranges.
-- Custom generic test `is_alphanumeric` for ID columns.
+- Custom generic test `is_alphanumeric` for ID columns (defined in `macros/tests/is_alphanumeric.sql`).
 - Data test `revenue_consistency` validates core vs. finance revenue.
 
 Note: some tests are set to `severity: warn` to demonstrate real-world data quality issues without failing every run.

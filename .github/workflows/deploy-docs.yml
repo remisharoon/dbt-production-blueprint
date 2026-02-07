@@ -32,10 +32,7 @@ jobs:
             mkdocs-minify-plugin \
             mkdocs-git-revision-date-localized-plugin
 
-      - name: Install dbt packages
-        run: dbt deps
-
-      - name: Generate dbt docs
+      - name: Configure dbt profile
         run: |
           mkdir -p ~/.dbt
 
@@ -50,8 +47,16 @@ jobs:
             "      schema: main" \
             "      threads: 4" > ~/.dbt/profiles.yml
 
+      - name: Install dbt packages
+        run: dbt deps
+
+      - name: Validate dbt parse
+        run: dbt parse --target ci
+
+      - name: Generate dbt docs
+        run: |
           # Generate dbt docs with DuckDB
-          dbt docs generate --target-path docs/dbt_artifacts
+          dbt docs generate --target ci --target-path docs/dbt_artifacts
 
       - name: Deploy with MkDocs
         run: mkdocs gh-deploy --force

@@ -45,7 +45,7 @@ dbt build --select state_modified_plus --state path/to/previous/manifest
 **Data Quality**
 - Seeds intentionally include data issues for demo purposes.
 - Several tests are set to `severity: warn` to avoid failing the full build on known bad data.
-- Custom generic test: `tests/is_alphanumeric.sql`.
+- Custom generic test: `macros/tests/is_alphanumeric.sql`.
 - Data test for revenue parity: `tests/revenue_consistency.sql`.
 
 **Operational Hooks**
