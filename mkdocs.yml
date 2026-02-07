@@ -10,35 +10,61 @@ use_directory_urls: false
 theme:
   name: material
   language: en
+  custom_dir: docs/overrides
   features:
     - navigation.instant
+    - navigation.instant.prefetch
     - navigation.sections
     - navigation.expand
     - navigation.top
+    - navigation.tracking
+    - navigation.indexes
+    - navigation.prune
     - search.suggest
     - search.highlight
+    - search.share
+    - content.code.copy
     - content.tabs.link
+    - content.action.edit
+    - content.action.view
+    - toc.follow
+    - announce.dismiss
   palette:
-    - scheme: default
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
       primary: indigo
       accent: cyan
       toggle:
         icon: material/weather-night
         name: Switch to dark mode
-    - scheme: slate
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
       primary: indigo
       accent: cyan
       toggle:
         icon: material/white-balance-sunny
         name: Switch to light mode
+  font:
+    text: Roboto
+    code: Roboto Mono
+  icon:
+    logo: material/database
+    repo: fontawesome/brands/github
 
 plugins:
-  - search
+  - search:
+      lang: en
+      separator: '[\s\-\.]+'
   - minify:
       minify_html: true
+      minify_js: true
+      minify_css: true
+      htmlmin_opts:
+        remove_comments: true
   - git-revision-date-localized:
       type: timeago
       fallback_to_build_date: true
+      enable_creation_date: true
 
 markdown_extensions:
   - admonition
@@ -47,8 +73,49 @@ markdown_extensions:
   - tables
   - toc:
       permalink: true
+      toc_depth: 4
+  - pymdownx.details
+  - pymdownx.superfences
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.tasklist:
+      custom_checkbox: true
+  - pymdownx.emoji:
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
+
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/remisharoon/dbt-production-blueprint
+      name: GitHub Repository
+  analytics:
+    feedback:
+      title: Was this page helpful?
+      ratings:
+        - icon: material/thumb-up-outline
+          name: This page was helpful
+          data: 1
+          note: Thanks for the feedback!
+        - icon: material/thumb-down-outline
+          name: This page could be improved
+          data: 0
+          note: Thanks for your feedback!
+
+extra_css:
+  - stylesheets/extra.css
 
 nav:
   - Home: index.md
-  - Project Architecture: architecture.md
+  - Architecture: architecture.md
+  - Features: features.md
+  - Setup Guide: setup.md
+  - Troubleshooting: troubleshooting.md
+  - Quick Reference: reference.md
   - dbt Documentation: dbt_artifacts/index.html
