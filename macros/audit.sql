@@ -4,9 +4,9 @@
     {% else %}
         {% set create_sql %}
             create table if not exists {{ target.database }}.{{ target.schema }}.audit_run (
-                run_started_at timestamp_ntz,
-                invocation_id string,
-                target_name string
+                run_started_at {{ dbt.type_timestamp() }},
+                invocation_id {{ dbt.type_string() }},
+                target_name {{ dbt.type_string() }}
             )
         {% endset %}
 
