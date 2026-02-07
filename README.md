@@ -52,22 +52,34 @@ snapshots/
 
 **Quick Start (DuckDB - Recommended for Demo/Testing)**
 ```bash
-# Install Python dependencies
+# Step 1: Install Python dependencies (includes dbt-duckdb adapter)
 pip install -r requirements.txt
 
-# Install dbt packages
+# Step 2: Install dbt packages (dbt_utils, dbt_expectations, audit_helper)
 dbt deps
 
-# Load seed data
+# Step 3: Load seed data
 dbt seed
 
-# Build everything (models + tests + snapshots)
+# Step 4: Build everything (models + tests + snapshots)
 dbt build
 
-# Generate and serve documentation
+# Step 5: Generate and serve documentation
 dbt docs generate
 dbt docs serve
 ```
+
+**Important**: You must install Python dependencies (Step 1) before running `dbt deps` (Step 2). The DuckDB adapter is a Python package installed via pip, not a dbt package.
+
+**Automated Setup**: Run `./quickstart.sh` for automated installation.
+
+**Documentation**:
+- [`INSTALL.md`](INSTALL.md) - Step-by-step installation guide
+- [`SETUP_GUIDE.md`](SETUP_GUIDE.md) - Detailed setup and configuration
+- [`TROUBLESHOOTING.md`](TROUBLESHOOTING.md) - Common issues and solutions
+- [`DUCKDB_SETUP.md`](DUCKDB_SETUP.md) - DuckDB-specific information
+- [`GITHUB_ACTIONS.md`](GITHUB_ACTIONS.md) - GitHub Actions CI/CD guide
+- [`QUICK_REFERENCE.md`](QUICK_REFERENCE.md) - Quick reference for commands
 
 **Quick Start (Snowflake - Production)**
 ```bash
@@ -183,8 +195,19 @@ Enable GitHub Pages with Actions:
 3. Push to `main` to trigger `.github/workflows/deploy-docs.yml`.
 4. The site will be available at `https://remisharoon.github.io/dbt-production-blueprint/` (configured in `mkdocs.yml`).
 
-**CI Profiles for dbt Docs**
-The workflow supports an optional secret named `DBT_PROFILES_YML` that should contain the full contents of a `profiles.yml`. This allows `dbt docs generate` to run in CI without checking profiles into the repo. If a live connection is not available, the workflow falls back to `--empty-catalog` but still requires a valid profile structure.
+**CI/CD with DuckDB**
+The GitHub Actions workflow now uses DuckDB for documentation generation, which means:
+- No external database connection required
+- No need for `DBT_PROFILES_YML` secret
+- Faster CI/CD pipeline
+- Works out of the box without any configuration
+
+The workflow automatically:
+1. Installs `dbt-core` and `dbt-duckdb`
+2. Installs dbt packages via `dbt deps`
+3. Creates a DuckDB profile in CI
+4. Generates dbt documentation
+5. Deploys to GitHub Pages via MkDocs
 
 **Where to Add Things**
 - New sources: `models/staging/_sources.yml`

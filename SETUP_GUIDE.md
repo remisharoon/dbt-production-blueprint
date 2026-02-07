@@ -4,10 +4,19 @@ This guide helps you set up the dbt project using DuckDB for local development, 
 
 ## Quick Start
 
-### 1. Install Dependencies
+### 1. Install Python Dependencies (IMPORTANT - Do This First!)
 
 ```bash
-# Install dbt packages (includes DuckDB adapter)
+# Install dbt-core and dbt-duckdb adapter via pip
+pip install -r requirements.txt
+```
+
+**Note**: The DuckDB adapter is a Python package that must be installed via pip, NOT via `dbt deps`. This is a common source of confusion.
+
+### 2. Install dbt Packages
+
+```bash
+# Install dbt packages (dbt_utils, dbt_expectations, audit_helper)
 dbt deps
 ```
 
@@ -334,3 +343,32 @@ dbt-production-blueprint/
 - [DuckDB Documentation](https://duckdb.org/docs/)
 - [Project README](README.md)
 - [AGENTS.md](AGENTS.md) - Project conventions and guidelines
+
+## GitHub Actions CI/CD
+
+The project includes a GitHub Actions workflow (`.github/workflows/deploy-docs.yml`) that automatically generates and deploys documentation to GitHub Pages.
+
+### What the Workflow Does
+
+1. **Installs dependencies**: `dbt-core`, `dbt-duckdb`, and MkDocs tools
+2. **Installs dbt packages**: Runs `dbt deps` to install dbt_utils, dbt_expectations, and audit_helper
+3. **Creates DuckDB profile**: Automatically configures DuckDB for CI environment
+4. **Generates dbt docs**: Runs `dbt docs generate` with DuckDB
+5. **Deploys to GitHub Pages**: Uses MkDocs to deploy the documentation site
+
+### Benefits of Using DuckDB in CI
+
+- ✅ No external database connection required
+- ✅ No need for `DBT_PROFILES_YML` secret
+- ✅ Faster CI/CD pipeline
+- ✅ Works out of the box without any configuration
+- ✅ No authentication or credentials needed
+
+### Enabling GitHub Pages
+
+1. Go to **Settings > Pages** in your GitHub repository
+2. Under **Source**, select **GitHub Actions**
+3. Push to `main` branch to trigger the workflow
+4. The documentation site will be available at your GitHub Pages URL
+
+The workflow is pre-configured and will work immediately after pushing to the `main` branch.
