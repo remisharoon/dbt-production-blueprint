@@ -11,8 +11,9 @@ models:
           - not_null
           - unique
           - relationships:
-              to: ref('stg_orders')
-              field: order_id
+              arguments:
+                to: ref('stg_orders')
+                field: order_id
       - name: order_total
         description: "Order total from staging."
         data_type: number(12,2)
