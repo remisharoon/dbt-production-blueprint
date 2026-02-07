@@ -58,20 +58,5 @@ jobs:
           # Generate dbt docs with DuckDB
           dbt docs generate --target ci --target-path docs/dbt_artifacts
 
-      - name: Build MkDocs site
-        run: mkdocs build --site-dir docs_build
-
-      - name: Deploy to main branch
-        run: |
-          # Copy built files to docs folder
-          rm -rf docs/*
-          cp -r docs_build/* docs/
-
-          # Configure git
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-
-          # Commit and push changes
-          git add docs/
-          git diff --staged --quiet || git commit -m "chore: update docs [skip ci]"
-          git push origin main
+      - name: Deploy with MkDocs
+        run: mkdocs gh-deploy --force --ignore-protocol
