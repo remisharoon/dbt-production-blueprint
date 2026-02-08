@@ -174,7 +174,7 @@ Defined in `models/exposures.yml` for finance dashboards and customer LTV applic
 ```bash
 pip install mkdocs mkdocs-material mkdocs-minify-plugin mkdocs-git-revision-date-localized-plugin
 ```
-2. Generate dbt docs into the MkDocs tree.
+2. Generate dbt docs into MkDocs tree.
 ```bash
 dbt docs generate --target-dir docs/dbt_artifacts
 ```
@@ -189,11 +189,12 @@ dbt docs generate --target-dir docs/dbt_artifacts --empty-catalog
 ```
 
 **GitHub Pages (Docs Deployment)**
-Enable GitHub Pages with Actions:
-1. Go to **Settings > Pages** in your GitHub repo.
-2. Under **Source**, select **GitHub Actions**.
-3. Push to `main` to trigger `.github/workflows/deploy-docs.yml`.
-4. The site will be available at `https://remisharoon.github.io/dbt-production-blueprint/` (configured in `mkdocs.yml`).
+The documentation site is automatically deployed via GitHub Actions:
+- GitHub Pages is configured to serve from the `gh-pages` branch
+- Pushing to `main` branch triggers `.github/workflows/deploy-docs.yml`
+- Workflow builds MkDocs site and deploys to `gh-pages` branch
+- Site is available at: https://remisharoon.github.io/dbt-production-blueprint/
+- No manual GitHub Pages configuration needed
 
 **CI/CD with DuckDB**
 The GitHub Actions workflow now uses DuckDB for documentation generation, which means:

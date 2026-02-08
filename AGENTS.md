@@ -66,7 +66,8 @@ dbt build --select state_modified_plus --state path/to/previous/manifest
 - Use `{{ doc('...') }}` references in model descriptions.
 
 **Profiles**
-- `profiles.yml` is not included. Create a local profile named `dbt_production_blueprint` in `~/.dbt/profiles.yml`.
+- `profiles.yml` in project root is pre-configured for DuckDB development.
+- For Snowflake, create a profile named `dbt_production_blueprint_snowflake` in `~/.dbt/profiles.yml`.
 
 **Safe Changes**
 - Do not remove seeds or tests without replacing their intent.
