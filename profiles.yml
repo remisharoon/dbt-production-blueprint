@@ -25,3 +25,16 @@ dbt_production_blueprint_duckdb:
       schema: dbt_dev
       threads: 4
       query_tag: dbt_production_blueprint
+
+dbt_production_blueprint_postgres:
+  target: dev
+  outputs:
+    dev:
+      type: postgres
+      host: localhost
+      port: 5433
+      user: dbt_user
+      password: dbt_password
+      database: dbt_production_blueprint
+      schema: dbt_dev
+      threads: 4

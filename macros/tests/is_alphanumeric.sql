@@ -10,6 +10,10 @@
     regexp_matches(cast({{ column_name }} as {{ dbt.type_string() }}), '^[A-Za-z0-9]+$')
 {% endmacro %}
 
+{% macro postgres__is_alphanumeric_match(column_name) %}
+    cast({{ column_name }} as {{ dbt.type_string() }}) ~ '^[A-Za-z0-9]+$'
+{% endmacro %}
+
 {% test is_alphanumeric(model, column_name) %}
 select *
 from {{ model }}

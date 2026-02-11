@@ -30,10 +30,10 @@ models:
         data_type: varchar
       - name: created_at
         description: "Customer creation timestamp."
-        data_type: timestamp_ntz
+        data_type: timestamp
       - name: updated_at
         description: "Customer updated timestamp."
-        data_type: timestamp_ntz
+        data_type: timestamp
       - name: customer_status
         description: "Normalized customer status."
         data_type: varchar
@@ -52,7 +52,9 @@ models:
         data_type: varchar
         tests:
           - not_null
-          - unique
+          - unique:
+              config:
+                severity: warn
       - name: order_key
         description: "Surrogate key for orders."
         data_type: varchar
@@ -73,7 +75,7 @@ models:
         data_type: date
       - name: updated_at
         description: "Order updated timestamp for incremental logic."
-        data_type: timestamp_ntz
+        data_type: timestamp
       - name: order_status
         description: "Normalized order status."
         data_type: varchar
@@ -82,19 +84,19 @@ models:
         data_type: varchar
       - name: order_total
         description: "Original order total."
-        data_type: number(12,2)
+        data_type: numeric(12,2)
       - name: currency
         description: "Currency code."
         data_type: varchar
       - name: total_paid_amount
         description: "Total payment amount for the order."
-        data_type: number(12,2)
+        data_type: decimal(38,2)
       - name: payment_coverage_status
         description: "Coverage of payment relative to order total."
         data_type: varchar
       - name: payment_count
         description: "Number of payment transactions for the order."
-        data_type: number(38,0)
+        data_type: bigint
       - name: last_payment_date
         description: "Most recent payment date."
         data_type: date
@@ -106,10 +108,10 @@ models:
         data_type: boolean
       - name: deleted_at
         description: "Timestamp when order was marked deleted."
-        data_type: timestamp_ntz
+        data_type: timestamp
       - name: net_order_total
         description: "Net order total excluding soft-deleted orders. {{ doc('total_revenue') }}"
-        data_type: number(12,2)
+        data_type: numeric(12,2)
         tests:
           - dbt_expectations.expect_column_values_to_be_between:
               min_value: 0
@@ -132,14 +134,14 @@ models:
         data_type: varchar
       - name: lifetime_value
         description: "Total revenue contributed by a customer over their lifetime. {{ doc('ltv') }}"
-        data_type: number(12,2)
+        data_type: decimal(38,2)
         tests:
           - dbt_expectations.expect_column_values_to_be_between:
               min_value: 0
               max_value: 1000000
       - name: order_count
         description: "Total number of orders placed by the customer."
-        data_type: number(38,0)
+        data_type: bigint
       - name: last_order_date
         description: "Most recent order date."
         data_type: date

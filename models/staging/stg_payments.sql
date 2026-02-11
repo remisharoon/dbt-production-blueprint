@@ -12,7 +12,7 @@ standardized as (
         upper(nullif(trim(order_id), '')) as order_id,
         cast(nullif(trim(cast(payment_date as text)), '') as date) as payment_date,
         lower(coalesce(nullif(trim(payment_method), ''), 'unknown')) as payment_method,
-        coalesce(cast(nullif(trim(cast(amount as text)), '') as decimal(12, 2)), 0.00) as amount,
+         coalesce(cast(nullif(trim(cast(amount as text)), '') as numeric(12, 2)), 0.00) as amount,
         lower(coalesce(nullif(trim(status), ''), 'unknown')) as payment_status,
         nullif(trim(provider_txn_id), '') as provider_txn_id
     from source_data

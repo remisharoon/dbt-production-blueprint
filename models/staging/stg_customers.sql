@@ -9,12 +9,12 @@ standardized as (
     select
         customer_id as customer_id_raw,
         upper(nullif(trim(customer_id), '')) as customer_id,
-        coalesce(initcap(nullif(trim(first_name), '')), 'Unknown') as first_name,
-        coalesce(initcap(nullif(trim(last_name), '')), 'Unknown') as last_name,
+         coalesce(nullif(trim(first_name), ''), 'Unknown') as first_name,
+         coalesce(nullif(trim(last_name), ''), 'Unknown') as last_name,
         lower(nullif(trim(email), '')) as email,
         nullif(trim(phone), '') as phone,
-        cast(nullif(trim(cast(created_at as text)), '') as {{ dbt.type_timestamp() }}) as created_at,
-        cast(nullif(trim(cast(updated_at as text)), '') as {{ dbt.type_timestamp() }}) as updated_at,
+        cast(nullif(trim(cast(created_at as text)), '') as timestamp) as created_at,
+        cast(nullif(trim(cast(updated_at as text)), '') as timestamp) as updated_at,
         lower(coalesce(nullif(trim(status), ''), 'unknown')) as customer_status,
         case
             when upper(trim(region)) in ('NORTH AMERICA', 'NA') then 'North America'

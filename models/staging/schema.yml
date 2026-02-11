@@ -39,10 +39,10 @@ models:
         data_type: varchar
       - name: created_at
         description: "Record creation timestamp from source."
-        data_type: timestamp_ntz
+        data_type: timestamp
       - name: updated_at
         description: "Record last update timestamp from source."
-        data_type: timestamp_ntz
+        data_type: timestamp
       - name: customer_status
         description: "Normalized customer status values."
         data_type: varchar
@@ -96,7 +96,7 @@ models:
         data_type: date
       - name: updated_at
         description: "Last updated timestamp for the order."
-        data_type: timestamp_ntz
+        data_type: timestamp
       - name: order_status
         description: "Normalized order status."
         data_type: varchar
@@ -107,7 +107,7 @@ models:
                 severity: warn
       - name: order_total
         description: "Order total after type casting and basic null handling."
-        data_type: number(12,2)
+        data_type: numeric(12,2)
         tests:
           - dbt_expectations.expect_column_values_to_be_between:
               min_value: 0
@@ -160,7 +160,7 @@ models:
                 severity: warn
       - name: amount
         description: "Payment amount cast to numeric; nulls converted to 0."
-        data_type: number(12,2)
+        data_type: numeric(12,2)
         tests:
           - dbt_expectations.expect_column_values_to_be_between:
               min_value: 0
