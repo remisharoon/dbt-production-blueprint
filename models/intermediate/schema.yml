@@ -11,9 +11,8 @@ models:
           - not_null
           - unique
           - relationships:
-              arguments:
-                to: ref('stg_orders')
-                field: order_id
+              to: ref('stg_orders')
+              field: order_id
       - name: order_total
         description: "Order total from staging."
         data_type: number(12,2)
@@ -31,9 +30,8 @@ models:
         data_type: number(12,2)
         tests:
           - dbt_expectations.expect_column_values_to_be_between:
-              arguments:
-                min_value: 0
-                max_value: 100000
+              min_value: 0
+              max_value: 100000
       - name: last_payment_date
         description: "Latest payment date for the order."
         data_type: date

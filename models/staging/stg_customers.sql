@@ -13,8 +13,8 @@ standardized as (
         coalesce(initcap(nullif(trim(last_name), '')), 'Unknown') as last_name,
         lower(nullif(trim(email), '')) as email,
         nullif(trim(phone), '') as phone,
-        try_cast(created_at as {{ dbt.type_timestamp() }}) as created_at,
-        try_cast(updated_at as {{ dbt.type_timestamp() }}) as updated_at,
+        cast(nullif(trim(cast(created_at as text)), '') as {{ dbt.type_timestamp() }}) as created_at,
+        cast(nullif(trim(cast(updated_at as text)), '') as {{ dbt.type_timestamp() }}) as updated_at,
         lower(coalesce(nullif(trim(status), ''), 'unknown')) as customer_status,
         case
             when upper(trim(region)) in ('NORTH AMERICA', 'NA') then 'North America'

@@ -15,8 +15,7 @@ sources:
           - name: email
             tests:
               - column_type_is:
-                  arguments:
-                    column_type: varchar
+                  column_type: varchar
 
       - name: raw_orders
         description: "Order headers with status, totals, and soft-delete flags."
