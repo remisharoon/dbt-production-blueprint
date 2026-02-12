@@ -1,5 +1,11 @@
 # dbt Production Blueprint
 
+[![dbt Version](https://img.shields.io/badge/dbt-1.8+-FF69B4)](https://docs.getdbt.com/)
+[![Python](https://img.shields.io/badge/python-3.8+-blue)](https://python.org/)
+[![License](https://img.shields.io/badge/license-MIT-green)](LICENSE)
+[![Docs](https://img.shields.io/badge/docs-MkDocs-4B8BBE)](https://remisharoon.github.io/dbt-production-blueprint/)
+[![GitHub Stars](https://img.shields.io/github/stars/remisharoon/dbt-production-blueprint?style=social)](https://github.com/remisharoon/dbt-production-blueprint)
+
 A production-grade dbt project that demonstrates real-world enterprise patterns for an e-commerce (retail) warehouse. This repository is intentionally "kitchen sink" and includes staging cleanup, intermediate logic, marts, incremental models, snapshots, macros, custom tests, exposures, selectors, operational hooks, and a full documentation site.
 
 **Quick Start with DuckDB (Demo/Testing)**
@@ -17,7 +23,41 @@ dbt seed
 dbt build
 ```
 
-**Key Features**
+## 🏗️ Architecture
+
+```mermaid
+graph TD
+    A[Seeds: raw_customers, raw_orders, raw_payments] --> B[Staging Layer]
+    B --> C[stg_customers]
+    B --> D[stg_orders]
+    B --> E[stg_payments]
+    C & D & E --> F[Intermediate Layer]
+    F --> G[int_order_payments]
+    F --> H[int_order_status_categorized]
+    G & H --> I[Marts Layer]
+    I --> J[Core Mart]
+    I --> K[Finance Mart]
+    J --> L[dim_customers]
+    J --> M[fct_orders]
+    J --> N[fct_customer_ltv]
+    K --> O[fct_revenue]
+    K --> P[region_summary]
+    C -.->|SCD Type 2| Q[snap_customers_history]
+```
+
+## 📊 Project Stats
+
+| Metric | Count |
+|--------|-------|
+| **Models** | 10 |
+| **Tests** | 50+ |
+| **Data Layers** | 3 |
+| **Regions** | 4 |
+| **Snapshots** | 1 |
+| **Custom Macros** | 7 |
+
+## 🎯 Key Features
+
 - **DuckDB support** for local development, testing, and documentation (no external database required)
 - Snowflake-optimized SQL with dbt 1.8+ (production-ready)
 - Layered model design: `staging` -> `intermediate` -> `marts`.
@@ -25,32 +65,39 @@ dbt build
 - SCD Type 2 snapshots for customer history.
 - Dynamic SQL generation via macros.
 - Custom generic tests and data tests.
-- Docs blocks and model descriptions.
+- Enforced model contracts with column data types.
+- Doc blocks and model descriptions.
 - Run hooks and access grants.
 - State-based CI selectors for `state:modified` workflows.
-- MkDocs site with embedded dbt docs.
+- MkDocs site with embedded dbt docs and interactive data lineage.
 
-**Project Structure**
+## 📚 Documentation
+
+- **[Live Documentation Site](https://remisharoon.github.io/dbt-production-blueprint/)** - Full interactive documentation
+- **[Data Dictionary](https://remisharoon.github.io/dbt-production-blueprint/reference/data-dictionary/)** - All fields and columns documented
+- **[Data Lineage](https://remisharoon.github.io/dbt-production-blueprint/architecture/data-flow/)** - Visual data flow diagrams
+- **[Macro Reference](https://remisharoon.github.io/dbt-production-blueprint/reference/macros/)** - Macro API documentation
+- **[Architecture Decisions](https://remisharoon.github.io/dbt-production-blueprint/architecture/decisions/)** - ADRs documenting design choices
+
+## 📂 Project Structure
+
 ```
 models/
-  staging/
-  intermediate/
-  marts/
-    core/
-    finance/
-seeds/
-macros/
-tests/
-analyses/
-snapshots/
+  staging/          # 3 models: Raw source normalization
+  intermediate/     # 2 models: Business logic layer
+  marts/            # 5 models: Analytics-ready tables
+    core/           # 3 models: Dimensions & facts
+    finance/        # 2 models: Revenue aggregates
+seeds/              # 3 seed files: Sample data
+macros/             # 7 macros: Reusable SQL & tests
+tests/              # 1 data test: Revenue consistency
+analyses/           # Ad-hoc analysis directory
+snapshots/          # 1 snapshot: SCD Type 2 history
+docs/               # MkDocs documentation site
 ```
 
-**Prerequisites**
-- Python 3.8+
-- For local development/demo: DuckDB (included in requirements.txt)
-- For production: Snowflake account and credentials
+## 🚀 Quick Start (DuckDB - Recommended for Demo/Testing)
 
-**Quick Start (DuckDB - Recommended for Demo/Testing)**
 ```bash
 # Step 1: Install Python dependencies (includes dbt-duckdb adapter)
 pip install -r requirements.txt
@@ -73,7 +120,8 @@ dbt docs serve
 
 **Automated Setup**: Run `./quickstart.sh` for automated installation.
 
-**Documentation**:
+## 📖 Additional Guides
+
 - [`INSTALL.md`](INSTALL.md) - Step-by-step installation guide
 - [`SETUP_GUIDE.md`](SETUP_GUIDE.md) - Detailed setup and configuration
 - [`TROUBLESHOOTING.md`](TROUBLESHOOTING.md) - Common issues and solutions
@@ -81,7 +129,8 @@ dbt docs serve
 - [`GITHUB_ACTIONS.md`](GITHUB_ACTIONS.md) - GitHub Actions CI/CD guide
 - [`QUICK_REFERENCE.md`](QUICK_REFERENCE.md) - Quick reference for commands
 
-**Quick Start (Snowflake - Production)**
+## 🏭 Quick Start (Snowflake - Production)
+
 ```bash
 # Install Python dependencies
 pip install -r requirements.txt
@@ -99,7 +148,8 @@ dbt seed
 dbt build
 ```
 
-**Common Workflows**
+## 🔧 Common Workflows
+
 ```bash
 # Run only staging
 dbt run --select staging_only
@@ -114,70 +164,108 @@ dbt build --select state_modified_plus --state path/to/previous/manifest
 dbt build --select state_modified --state path/to/previous/manifest
 ```
 
-**Selectors**
+## 🎯 Selectors
+
 Selectors live in `selectors.yml` and include:
 - `state_modified`, `state_modified_plus`, `state_modified_configs`
 - `staging_only`, `marts_only`
 
-**Seeds**
+## 🌱 Seeds
+
 Seed data is intentionally dirty to showcase cleaning logic and data quality testing.
-- `seeds/raw_customers.csv`
-- `seeds/raw_orders.csv`
-- `seeds/raw_payments.csv`
+- `seeds/raw_customers.csv` (11 rows) - Duplicates, missing names, mixed case emails
+- `seeds/raw_orders.csv` (12 rows) - Duplicates, missing order_total, mixed status
+- `seeds/raw_payments.csv` (12 rows) - Duplicates, missing amounts, mixed methods
 
-**Staging Models**
-- `stg_customers`, `stg_orders`, `stg_payments`
-- Standardized naming, type casting, null handling
-- Surrogate keys via `dbt_utils.generate_surrogate_key`
+## 🔄 Staging Models
 
-**Intermediate Models**
-- `int_order_payments` joins orders and payments with rollups.
-- `int_order_status_categorized` demonstrates Jinja loop logic for CASE generation.
+| Model | Description |
+|-------|-------------|
+| `stg_customers` | Customer standardization with surrogate keys and region normalization |
+| `stg_orders` | Order header standardization with soft-delete handling |
+| `stg_payments` | Payment transaction normalization |
 
-**Marts**
-- `dim_customers` is a deduped dimension with a post-hook grant.
-- `fct_orders` is incremental with merge, soft-deletes, and partitioned updates via `updated_at`.
-- `fct_revenue` and `fct_customer_ltv` provide finance and lifecycle metrics.
-- `region_summary` is generated dynamically by a macro.
+## ⚙️ Intermediate Models
 
-**Snapshots**
-- `snap_customers_history` is SCD Type 2 using `updated_at`.
+| Model | Description |
+|-------|-------------|
+| `int_order_payments` | Order-payment aggregation with rollups and payment coverage |
+| `int_order_status_categorized` | Dynamic status grouping using Jinja macro logic |
 
-**Macros**
-- `log_run_start()` inserts run metadata into `audit_run` (on-run-start).
-- `order_status_case()` generates CASE logic via Jinja.
-- `generate_region_summary_sql()` builds dynamic SQL per region.
+## 📊 Marts
 
-**Testing**
-- Generic tests for `not_null`, `unique`, and `relationships` are applied across layers.
-- `metaplane/dbt_expectations` tests validate numeric ranges.
-- Custom generic test `is_alphanumeric` for ID columns (defined in `macros/tests/is_alphanumeric.sql`).
-- Data test `revenue_consistency` validates core vs. finance revenue.
+### Core Mart (`mart_core` schema)
 
-Note: some tests are set to `severity: warn` to demonstrate real-world data quality issues without failing every run.
+| Model | Type | Key Features |
+|-------|------|--------------|
+| `dim_customers` | Dimension | Deduplicated to latest record, post-hook grant to reporter role |
+| `fct_orders` | Fact (Incremental) | Merge strategy with `order_id` unique key, soft-delete handling |
+| `fct_customer_ltv` | Fact | Customer lifetime value aggregates with cohort analysis support |
 
-**Documentation**
-- Model and column-level docs live in `schema.yml` files.
-- Doc blocks are defined in `models/docs.md` for `Total Revenue` and `LTV`.
+### Finance Mart (`mart_finance` schema)
+
+| Model | Description |
+|-------|-------------|
+| `fct_revenue` | Daily revenue by currency and region with `{{ doc('total_revenue') }}` metric |
+| `region_summary` | Dynamic region rollup using macro-based SQL generation |
+
+## 📸 Snapshots
+
+- `snap_customers_history` - SCD Type 2 using `updated_at` strategy, tracks all customer attribute changes
+
+## 🔧 Macros
+
+| Macro | Purpose |
+|-------|---------|
+| `log_run_start()` | On-run-start hook that inserts run metadata into `audit_run` |
+| `order_status_case()` | Generates dynamic CASE statement for status categorization |
+| `generate_region_summary_sql()` | Builds dynamic SQL per region for rollup aggregations |
+| `numeric_type(precision, scale)` | Adapter-dispatched numeric type (Snowflake vs others) |
+
+## 🧪 Testing
+
+- **Generic tests**: `not_null`, `unique`, and `relationships` applied across layers
+- **dbt_expectations**: Advanced tests validating numeric ranges
+- **Custom generic tests**:
+  - `is_alphanumeric` - Validates ID columns are alphanumeric (macro: `macros/tests/is_alphanumeric.sql`)
+  - `column_type_is` - Validates column data types match expected types (macro: `macros/tests/column_type_is.sql`)
+- **Data tests**:
+  - `revenue_consistency` - Cross-mart reconciliation test validating revenue matches across models
+
+**Note**: Some tests use `severity: warn` to demonstrate real-world data quality issues without failing every run.
+
+## 📝 Documentation
+
+- Model and column-level docs live in `schema.yml` files in each model directory.
+- Doc blocks are defined in `models/docs.md` for `Total Revenue` and `LTV` metrics.
 - MkDocs site configuration is in `mkdocs.yml` and embeds dbt docs from `docs/dbt_artifacts`.
 - The documentation website is published via GitHub Pages using the `gh-pages` branch.
 
-**Exposures**
-Defined in `models/exposures.yml` for finance dashboards and customer LTV applications.
+## 🎯 Exposures
 
-**Operational Hooks**
-- `on-run-start` inserts run metadata into `audit_run` in the target schema.
-- `post-hook` on `dim_customers` grants read access to role `reporter`.
+Defined in `models/exposures.yml` for downstream dependencies:
+- `finance_executive_dashboard` - Finance dashboard consuming `fct_revenue`, `fct_orders`, `dim_customers`
+- `customer_ltv_app` - Customer LTV application consuming `fct_customer_ltv`, `dim_customers`
 
-**Documentation Site (MkDocs + dbt Docs)**
+## 🎣 Operational Hooks
+
+- `on-run-start` - Inserts run metadata into `audit_run` table in the target schema
+- `post-hook` on `dim_customers` - Grants read access to role `reporter`
+
+## 🌐 Documentation Site (MkDocs + dbt Docs)
+
+### Local Development
+
 1. Install docs tooling.
 ```bash
 pip install mkdocs mkdocs-material mkdocs-minify-plugin mkdocs-git-revision-date-localized-plugin
 ```
+
 2. Generate dbt docs into MkDocs tree.
 ```bash
 dbt docs generate --target-dir docs/dbt_artifacts
 ```
+
 3. Serve locally.
 ```bash
 mkdocs serve
@@ -188,7 +276,8 @@ If your local environment does not have a warehouse connection, you can run:
 dbt docs generate --target-dir docs/dbt_artifacts --empty-catalog
 ```
 
-**GitHub Pages (Docs Deployment)**
+## 🚀 GitHub Pages (Docs Deployment)
+
 The documentation site is automatically deployed via GitHub Actions:
 - GitHub Pages is configured to serve from the `gh-pages` branch
 - Pushing to `main` branch triggers `.github/workflows/deploy-docs.yml`
@@ -196,8 +285,9 @@ The documentation site is automatically deployed via GitHub Actions:
 - Site is available at: https://remisharoon.github.io/dbt-production-blueprint/
 - No manual GitHub Pages configuration needed
 
-**CI/CD with DuckDB**
-The GitHub Actions workflow now uses DuckDB for documentation generation, which means:
+## ⚙️ CI/CD with DuckDB
+
+The GitHub Actions workflow uses DuckDB for documentation generation, which means:
 - No external database connection required
 - No need for `DBT_PROFILES_YML` secret
 - Faster CI/CD pipeline
@@ -210,20 +300,23 @@ The workflow automatically:
 4. Generates dbt documentation
 5. Deploys to GitHub Pages via MkDocs
 
-**Where to Add Things**
+## ➕ Where to Add Things
+
 - New sources: `models/staging/_sources.yml`
 - New staging models: `models/staging/`
 - New business logic: `models/intermediate/`
 - New marts: `models/marts/core` or `models/marts/finance`
 - New macros: `macros/`
-- New tests: `tests/`
+- New tests: `tests/` or `macros/tests/`
 - New snapshots: `snapshots/`
+- New documentation pages: `docs/`
 
-**Profiles Configuration**
+## 🔐 Profiles Configuration
 
 The project includes a [`profiles.yml`](profiles.yml) file pre-configured for DuckDB development. For production Snowflake usage, create a profile in `~/.dbt/profiles.yml`.
 
-**DuckDB (Default - for Demo/Testing)**
+### DuckDB (Default - for Demo/Testing)
+
 The project uses [`profiles.yml`](profiles.yml) in the project root with DuckDB configuration:
 ```yaml
 dbt_production_blueprint_duckdb:
@@ -236,7 +329,8 @@ dbt_production_blueprint_duckdb:
       threads: 4
 ```
 
-**Snowflake (Production)**
+### Snowflake (Production)
+
 For production use, create `~/.dbt/profiles.yml`:
 ```yaml
 dbt_production_blueprint_snowflake:
@@ -256,7 +350,8 @@ dbt_production_blueprint_snowflake:
 
 See [`SETUP_GUIDE.md`](SETUP_GUIDE.md) for detailed setup instructions.
 
-**Recommended CI Pattern**
+## 📋 Recommended CI Pattern
+
 ```bash
 # Generate current state
 dbt build
@@ -266,5 +361,16 @@ dbt build
 dbt build --select state_modified_plus --state path/to/previous/manifest --defer
 ```
 
-**License**
-See `LICENSE`.
+## 📄 License
+
+See [`LICENSE`](LICENSE).
+
+---
+
+<div align="center">
+
+**[View Live Documentation](https://remisharoon.github.io/dbt-production-blueprint/)**
+
+Made with ❤️ for the dbt community
+
+</div>

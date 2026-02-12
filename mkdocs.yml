@@ -1,5 +1,5 @@
 site_name: dbt Production Blueprint
-site_description: Enterprise-grade dbt blueprint for Snowflake with full documentation and dbt docs integration.
+site_description: Enterprise-grade dbt blueprint for Snowflake with full documentation, interactive data lineage, and dbt docs integration.
 site_url: https://remisharoon.github.io/dbt-production-blueprint/
 repo_url: https://github.com/remisharoon/dbt-production-blueprint
 repo_name: remisharoon/dbt-production-blueprint
@@ -86,6 +86,12 @@ markdown_extensions:
       alternate_style: true
   - pymdownx.tasklist:
       custom_checkbox: true
+  - pymdownx.emoji
+  - pymdownx.caret
+  - pymdownx.mark
+  - pymdownx.tilde
+  - def_list
+  - md_in_html
 
 extra:
   social:
@@ -108,11 +114,44 @@ extra:
 extra_css:
   - stylesheets/extra.css
 
+extra_javascript:
+  - https://unpkg.com/mermaid@10.9.0/dist/mermaid.min.js
+
 nav:
   - Home: index.md
-  - Architecture: architecture.md
-  - Features: features.md
-  - Setup Guide: setup.md
-  - Troubleshooting: troubleshooting.md
+  
+  - Getting Started:
+    - Overview: getting-started/index.md
+    - Quick Start: getting-started/quickstart.md
+    - Installation: getting-started/installation.md
+    - Configuration: getting-started/configuration.md
+  
+  - Architecture:
+    - Overview: architecture/index.md
+    - Data Flow: architecture/data-flow.md
+    - Layers: architecture/layers.md
+    - Patterns: architecture/patterns.md
+    - Decisions:
+      - "ADR-001: DuckDB for CI": architecture/decisions/adr-001-duckdb-ci.md
+      - "ADR-002: Incremental Strategy": architecture/decisions/adr-002-incremental-strategy.md
+      - "ADR-003: Contract Enforcement": architecture/decisions/adr-003-contract-enforcement.md
+  
+  - Reference:
+    - Data Dictionary: reference/data-dictionary.md
+    - Models:
+      - Staging: reference/models/staging/index.md
+      - Intermediate: reference/models/intermediate/index.md
+      - Marts Core: reference/models/marts-core/index.md
+      - Marts Finance: reference/models/marts-finance/index.md
+    - Macros: reference/macros.md
+    - Tests: reference/tests.md
+    - Selectors: reference/selectors.md
+  
+  - Operations:
+    - CI/CD: operations/ci-cd.md
+    - Hooks: operations/hooks.md
+    - Troubleshooting: troubleshooting.md
+  
   - Quick Reference: reference.md
+  
   - dbt Documentation: dbt_artifacts/index.html
